@@ -62,6 +62,8 @@ Module._resolveFilename = function (request, ...rest) {
   return origResolve.call(this, request, ...rest)
 }
 
+// demo 直接引仓库源码，方便改一行就试。你自己的脚本里应该写：
+//   const { launch } = require('miniprogram-automator-next')
 const { launch } = require('../packages/miniprogram-automator-next/src/index')
 
 ;(async () => {

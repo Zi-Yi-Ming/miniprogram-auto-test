@@ -34,8 +34,8 @@ Node 修了 CVE-2024-27980（BatBadBut）之后，不带 `shell:true` 地 spawn 
 |---|---|---|
 | 微信开发者工具 | 驱动模拟器 | 装了并**启动过至少一次**（首次要登录） |
 | Node.js | 跑测试脚本 | `node -v` |
-| `miniprogram-automator` | 官方 SDK，底层 | 在**被测小程序项目**里 `npm i -D miniprogram-automator` |
-| `miniprogram-automator-next` | 本项目的修复包 | 同上目录安装；未发布到 npm 时，把仓库的 `packages/miniprogram-automator-next/` 复制进去用相对路径 require |
+| `miniprogram-automator-next` | 本项目的修复包（底层还是官方 SDK） | 在**被测小程序项目**里 `npm i -D miniprogram-automator-next` |
+| `miniprogram-automator` | 官方 SDK，是上面那个包的 peerDependency | **npm 7+ 会自动装上**，不用单独装；要锁版本才手动 `npm i -D miniprogram-automator` |
 
 **开发者工具里必须开的三个开关**（设置 → 安全设置），少一个就卡住：
 

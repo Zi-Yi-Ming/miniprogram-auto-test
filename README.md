@@ -4,6 +4,7 @@
 >
 > 附带一个修复包 `miniprogram-automator-next`：**官方 SDK 在当前版本开发者工具上有两处是坏的，这里把它们修了。**
 
+[![npm](https://img.shields.io/npm/v/miniprogram-automator-next.svg)](https://www.npmjs.com/package/miniprogram-automator-next)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 ## 🔴 先说两个实测结论（这是本项目真正的价值）
@@ -67,8 +68,8 @@ Failed to launch wechat web devTools, please make sure cliPath is correctly spec
 在被测小程序项目里装依赖：
 
 ```bash
-npm i -D miniprogram-automator
-# 修复包（尚未发布到 npm）：把本仓库 packages/miniprogram-automator-next/ 复制进去，用相对路径 require
+npm i -D miniprogram-automator-next
+# 官方 miniprogram-automator 是 peerDependency，npm 7+ 会自动装上
 ```
 
 **DevTools CLI 路径别照抄网上的默认值** —— 安装位置用户可改（实测本机在 `D:\微信web开发者工具\`，不在 `Program Files` 下）。不传 `cliPath` 时包会自己探测；要手动查：
@@ -156,7 +157,7 @@ const { launch } = require('miniprogram-automator-next')
 | 自定义组件是边界 | 页面级 `selectorQuery` 不跨组件边界，`tap` 也只调页面方法。组件内部的元素和方法当前测不了 |
 | `tap` 要手动给 handler 名 | 不是偷懒，是运行时读不到事件绑定（见上文） |
 | 结论绑版本 | 上面两个结论在 DevTools 2.01.2510290 / 基础库 3.17.0 / Node v24.12.0 / Win 11 上实测。**嫌疑变量是工具版本不是基础库**（`evaluate` 在基础库运行时里跑得好好的，死的是按协议域切分的 `Page.*`，那是工具侧的边界）——但这是推断不是实测。要重测请换**工具版本**，方法见 SKILL.md 末尾 |
-| 修复包未发布 npm | 目前靠复制源码使用 |
+| 修复包刚发首版 | [`miniprogram-automator-next@0.1.0`](https://www.npmjs.com/package/miniprogram-automator-next)，只在一个真实项目上验证过（27 项自检），欢迎报 issue |
 
 ## 相关项目（不装作是空白市场）
 

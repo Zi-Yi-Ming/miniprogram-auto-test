@@ -1,5 +1,8 @@
 # miniprogram-automator-next
 
+[![npm](https://img.shields.io/npm/v/miniprogram-automator-next.svg)](https://www.npmjs.com/package/miniprogram-automator-next)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Zi-Yi-Ming/miniprogram-auto-test/blob/main/LICENSE)
+
 > 微信官方 `miniprogram-automator` 的适配层。修掉它在当前版本环境下**两处已经坏掉**的东西，其余能力原样透传。
 
 **不是要替代官方 SDK** —— 它是本包的 `peerDependency`，底层还是它。
@@ -51,16 +54,14 @@ cli 子进程被 kill 之后 DevTools 不会立刻关掉自动化端口，官方
 ## 安装
 
 ```bash
-npm i -D miniprogram-automator miniprogram-automator-next
+npm i -D miniprogram-automator-next
 ```
 
-`miniprogram-automator` 是 peerDependency，必须一起装。
+官方 `miniprogram-automator` 是 peerDependency，**npm 7+ 会自动帮你装上**（实测装的是 `0.12.1`）。想显式控制版本的话可以自己装：
 
-> ⚠️ **本包尚未发布到 npm。** 在发布之前，把这个目录（`packages/miniprogram-automator-next/`）复制进你的项目，用相对路径 require：
-> ```javascript
-> const { launch } = require('./miniprogram-automator-next')
-> ```
-> `miniprogram-automator` 仍然要正常 `npm i -D`。
+```bash
+npm i -D miniprogram-automator miniprogram-automator-next
+```
 
 ⚠️ **装在被测小程序项目里。** Node 的 `require` 是从**脚本所在目录**往上找 `node_modules` 的，跟你 `cd` 到哪无关 —— 测试脚本放在被测项目内部最省事。
 
@@ -230,4 +231,4 @@ await mp.evaluate((x) => x + 1, n)    // ✅ 43
 
 MIT。上游 `miniprogram-automator` 亦为 MIT。
 
-完整背景、AI 辅助生成测试脚本的用法、以及实测数据见仓库：[`miniprogram-auto-test`](../../README.md)。
+完整背景、AI 辅助生成测试脚本的用法、以及实测数据见仓库：[`miniprogram-auto-test`](https://github.com/Zi-Yi-Ming/miniprogram-auto-test)。
