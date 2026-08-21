@@ -6,7 +6,6 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/Zi-Yi-Ming/miniprogram-auto-test/ci.yml?branch=main)](https://github.com/Zi-Yi-Ming/miniprogram-auto-test/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Node.js >= 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](packages/miniprogram-automator-next/package.json)
-[![GitHub stars](https://img.shields.io/github/stars/Zi-Yi-Ming/miniprogram-auto-test)](https://github.com/Zi-Yi-Ming/miniprogram-auto-test/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/Zi-Yi-Ming/miniprogram-auto-test)](https://github.com/Zi-Yi-Ming/miniprogram-auto-test/issues)
 
 ## 简介
