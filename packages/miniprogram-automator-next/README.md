@@ -1,6 +1,7 @@
 # miniprogram-automator-next
 
 [![npm](https://img.shields.io/npm/v/miniprogram-automator-next.svg)](https://www.npmjs.com/package/miniprogram-automator-next)
+[![CI](https://img.shields.io/github/actions/workflow/status/Zi-Yi-Ming/miniprogram-auto-test/ci.yml?branch=main)](https://github.com/Zi-Yi-Ming/miniprogram-auto-test/actions/workflows/ci.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Zi-Yi-Ming/miniprogram-auto-test/blob/main/LICENSE)
 
 > 微信官方 `miniprogram-automator` 的适配层。修掉它在当前版本环境下**两处已经坏掉**的东西，其余能力原样透传。
@@ -226,6 +227,12 @@ await mp.evaluate((x) => x + 1, n)    // ✅ 43
 ## 为什么不去给官方提 PR
 
 官方 SDK 的 `repository` 字段指向腾讯内网域名（`git.code.oa.com`），**没有公开仓库，物理上没法提 PR**。这就是本包存在的原因。
+
+## 更新日志
+
+**0.1.1** —— 纯文档 + 工程化，没有行为改动。补 npm 页面上的链接与徽章；加 17 项冒烟测试（`npm test`，不需要开发者工具）和 GitHub Actions CI（Ubuntu + Windows × Node 18/24）。
+
+**0.1.0** —— 首版。修 `spawn EINVAL`、在 `evaluate` 之上重建元素层、筛掉残留自动化会话。
 
 ## License
 

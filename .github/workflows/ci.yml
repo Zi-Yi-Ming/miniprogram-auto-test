@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  # 本项目的核心能力（launch / tap / setData）强依赖本地微信开发者工具，
+  # GitHub 的机器上装不了，所以 CI 只跑「不需要工具也能验」的那部分：
+  # 语法门 + 导出面 + spawn EINVAL 的修复逻辑 + 打包内容。
+  # 真会话的端到端验证是本机跑 verify-package.js（27 项）。
+  smoke:
+    name: smoke (${{ matrix.os }} / node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Windows 必须在矩阵里：spawn EINVAL 本身就是 Windows 特有的问题，
+        # 而 resolveCliRunner 的行为按 process.platform 分支。
+        os: [ubuntu-latest, windows-latest]
+        # 18 是 engines 声明的下限；24 是当前主流。CVE-2024-27980 的行为变化在 18.20 之后。
+        node: [18, 24]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # 本包零运行时依赖，不需要 npm install。
+      # 而且「不装 peerDependency 也能 require」正是冒烟测试要验的一条，
+      # 所以这里故意什么都不装。
+      - name: 语法门
+        run: |
+          node --check packages/miniprogram-automator-next/src/index.js
+          node --check packages/miniprogram-automator-next/src/launcher.js
+          node --check packages/miniprogram-automator-next/src/page.js
+          node --check packages/miniprogram-automator-next/test/smoke.js
+          node --check demo/home-login.test.js
+          node --check verify-package.js
+
+      - name: 冒烟测试
+        run: npm test
+        working-directory: packages/miniprogram-automator-next
+
+      - name: 检查打包内容
+        run: npm pack --dry-run
+        working-directory: packages/miniprogram-automator-next

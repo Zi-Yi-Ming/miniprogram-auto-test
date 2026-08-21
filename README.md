@@ -3,6 +3,7 @@
 一句话生成微信小程序自动化测试脚本：AI 读你的 WXML + JS，产出能直接跑的测试脚本；顺手修掉官方 SDK 已经坏掉的两处。
 
 [![npm](https://img.shields.io/npm/v/miniprogram-automator-next.svg)](https://www.npmjs.com/package/miniprogram-automator-next)
+[![CI](https://img.shields.io/github/actions/workflow/status/Zi-Yi-Ming/miniprogram-auto-test/ci.yml?branch=main)](.github/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Node.js >= 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](packages/miniprogram-automator-next/package.json)
 [![GitHub stars](https://img.shields.io/github/stars/Zi-Yi-Ming/miniprogram-auto-test)](https://github.com/Zi-Yi-Ming/miniprogram-auto-test/stargazers)
@@ -196,25 +197,37 @@ flowchart LR
 
 ```
 miniprogram-auto-test/
+├── .github/workflows/
+│   └── ci.yml                             # CI：语法门 + 冒烟测试（不需要开发者工具的那部分）
 ├── skill/
-│   └── SKILL.md                          # skill 本体（复制到 ~/.claude/skills/）
+│   └── SKILL.md                           # skill 本体（复制到 ~/.claude/skills/）
 ├── packages/
 │   └── miniprogram-automator-next/        # 发布到 npm 的修复包
 │       ├── src/
 │       │   ├── index.js                   # 门面：launch / connect / MiniProgram
 │       │   ├── launcher.js                # spawn EINVAL 绕法 + cli 路径探测 + 残留会话筛除
 │       │   └── page.js                    # PageProxy：元素层能力，全部建在 evaluate 上
+│       ├── test/
+│       │   └── smoke.js                   # 17 项冒烟，无需开发者工具（CI 跑这个）
 │       ├── package.json
 │       └── README.md                      # 包的完整 API 文档
 ├── demo/
-│   ├── home-login.test.js                 # 在真实小程序上跑通的示例
-│   └── screenshots/
+│   └── home-login.test.js                 # 在真实小程序上跑通的示例（截图输出到 demo/screenshots/，不进库）
 ├── docs/
 │   └── api-cheatsheet.md                  # API 速查（给人看，含实测存活情况）
-├── verify-package.js                      # 包自检：27 项，跑通才允许发布
+├── verify-package.js                      # 端到端自检：27 项，需要本机有开发者工具
 ├── LICENSE                                # MIT
 └── README.md
 ```
+
+### 两层验证
+
+真会话没法在 CI 里跑（GitHub 的机器装不了微信开发者工具），所以拆成两层：
+
+| 层 | 跑什么 | 在哪跑 | 需要开发者工具 |
+|---|---|---|---|
+| **冒烟** | 17 项：语法、导出面、`PageProxy` 方法齐全、`spawn EINVAL` 修复逻辑（纯函数，用假 cli 目录测）、打包内容 | CI（Ubuntu + Windows × Node 18/24），也可本地 `npm test` | ❌ |
+| **端到端** | 27 项：真起会话、真点元素、真读写 `data`、真截图 | 本机 `node verify-package.js` | ✅ |
 
 ## API 速查
 
@@ -241,7 +254,7 @@ miniprogram-auto-test/
 - **`currentPage()` 拿到的对象基本没用** —— 它的方法全走已死的 `Page.*`；要操作页面用 `mp.open()` 返回的 `PageProxy`
 - **`systemInfo()` 别断言具体字段** —— 底层是已废弃的 `wx.getSystemInfoSync`，字段随版本漂移；要版本信息用 `mp.baseInfo()`
 - **结论绑版本** —— **嫌疑变量是工具版本不是基础库**：`evaluate` 在基础库运行时里跑得好好的，死的是按协议域切分的 `Page.*`，那是工具侧的边界。但这是推断不是实测，要重测请换**工具版本**，方法见 [`SKILL.md`](skill/SKILL.md) 末尾
-- **修复包刚发首版** —— `0.1.0`，只在一个真实项目上验证过（27 项自检），欢迎报 issue
+- **修复包刚发首版** —— `0.1.1`，只在一个真实项目上验证过（27 项端到端自检），欢迎报 issue
 
 ## 相关项目（不装作是空白市场）
 
@@ -300,7 +313,13 @@ miniprogram-auto-test/
 4. 推送分支：`git push origin feat/xxx`
 5. 提交 Pull Request
 
-改了修复包的话，跑一遍自检（需要改 `verify-package.js` 顶部的两个路径为你自己的）：
+改了修复包的话，先跑冒烟（不需要开发者工具，CI 跑的就是这个）：
+
+```bash
+cd packages/miniprogram-automator-next && npm test
+```
+
+再跑端到端自检（需要本机有开发者工具，并改 `verify-package.js` 顶部的两个路径为你自己的）：
 
 ```bash
 node verify-package.js

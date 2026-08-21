@@ -1,6 +1,6 @@
 {
   "name": "miniprogram-automator-next",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "微信小程序自动化测试 SDK 的适配层：修掉官方 miniprogram-automator 在 Node ≥18.20 上必炸的 spawn EINVAL，并在 evaluate 之上重建新版开发者工具里已失效的元素层能力（data/setData/tap/input/查询/等待）。",
   "keywords": [
     "miniprogram",
@@ -26,6 +26,9 @@
     "url": "https://github.com/Zi-Yi-Ming/miniprogram-auto-test/issues"
   },
   "main": "src/index.js",
+  "scripts": {
+    "test": "node test/smoke.js"
+  },
   "files": [
     "src",
     "README.md",
