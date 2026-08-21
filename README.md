@@ -3,7 +3,7 @@
 一句话生成微信小程序自动化测试脚本：AI 读你的 WXML + JS，产出能直接跑的测试脚本；顺手修掉官方 SDK 已经坏掉的两处。
 
 [![npm](https://img.shields.io/npm/v/miniprogram-automator-next.svg)](https://www.npmjs.com/package/miniprogram-automator-next)
-[![CI](https://img.shields.io/github/actions/workflow/status/Zi-Yi-Ming/miniprogram-auto-test/ci.yml?branch=main)](.github/workflows/ci.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/Zi-Yi-Ming/miniprogram-auto-test/ci.yml?branch=main)](https://github.com/Zi-Yi-Ming/miniprogram-auto-test/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Node.js >= 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](packages/miniprogram-automator-next/package.json)
 [![GitHub stars](https://img.shields.io/github/stars/Zi-Yi-Ming/miniprogram-auto-test)](https://github.com/Zi-Yi-Ming/miniprogram-auto-test/stargazers)
