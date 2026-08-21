@@ -1,0 +1,10 @@
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+
+# 本机调试草稿：硬编码了私有项目绝对路径，不进库（留在盘上备查）
+spike-*.js
+
+# 测试跑挂时留下的截图
+demo/screenshots/*-FAIL.png

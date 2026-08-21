@@ -1,0 +1,30 @@
+{
+  "name": "miniprogram-automator-next",
+  "version": "0.1.0",
+  "description": "微信小程序自动化测试 SDK 的适配层：修掉官方 miniprogram-automator 在 Node ≥18.20 上必炸的 spawn EINVAL，并在 evaluate 之上重建新版开发者工具里已失效的元素层能力（data/setData/tap/input/查询/等待）。",
+  "keywords": [
+    "miniprogram",
+    "miniprogram-automator",
+    "wechat",
+    "weapp",
+    "automation",
+    "e2e",
+    "testing",
+    "devtools",
+    "EINVAL",
+    "spawn"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "peerDependencies": {
+    "miniprogram-automator": "^0.12.1"
+  }
+}
