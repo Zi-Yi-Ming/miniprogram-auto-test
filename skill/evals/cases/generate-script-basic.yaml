@@ -1,0 +1,78 @@
+# 报告里使用的稳定用例 ID，与文件名（去掉 .yaml）保持一致
+id: generate-script-basic
+# 用例列表和报告里显示的简要说明
+title: 给定页面代码，能生成可直接运行的测试脚本
+# 补充背景：本用例覆盖的行为或防回归点
+description: |
+  这是 skill 的主路径：开发者给一个页面目录 + 一句话说要测什么，
+  skill 应引导 AI 读 WXML 拿 bindtap handler 名，生成用 miniprogram-automator-next
+  的脚本。关键是不能生成官方 SDK 那套已死的 page.$().tap() 写法。
+  prompt 末尾要求「贴在回答里」是必需的：AI 默认会把脚本写成文件、
+  回答里只留摘要，那样断言就看不到 tap(...) 的实际写法。
+
+input:
+  # 发给 Agent 的用户 prompt（单轮）
+  prompt: |
+    帮我给这个小程序页面生成一个自动化测试脚本，测「点提交按钮」这个流程。
+
+    pages/order/index.wxml：
+    ```
+    <view class="order-page">
+      <input class="phone-input" bindinput="onPhoneChange" placeholder="手机号" />
+      <button wx:if="{{canSubmit}}" class="submit-btn" bindtap="handleSubmit">提交订单</button>
+      <view wx:else class="hint">请先填写手机号</view>
+    </view>
+    ```
+
+    pages/order/index.ts：
+    ```
+    Page({
+      data: { phone: '', canSubmit: false },
+      onPhoneChange(e) {
+        const phone = e.detail.value
+        this.setData({ phone, canSubmit: /^1\d{10}$/.test(phone) })
+      },
+      handleSubmit() {
+        wx.request({ url: '/api/order', method: 'POST', data: { phone: this.data.phone } })
+      },
+    })
+    ```
+
+    项目在 D:\demo\myapp。
+
+    请把完整脚本直接贴在回答里（不要只写成文件），我要先看一遍再决定放哪。
+
+# 零成本前置门槛，不过则跳过 judge
+expect:
+  must_contain:
+    - "miniprogram-automator-next"
+  must_not_contain:
+    - "page.$("
+
+judge:
+  # 本用例的判定策略
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    # 必须用本项目的修复包，且用重建后的 API
+    - output_contains:
+        all:
+          - "miniprogram-automator-next"
+          - "launch"
+          - "handleSubmit"
+    # tap 必须带上从 WXML 抄来的 handler 名（这是本方案的核心约束）
+    - output_matches:
+        all:
+          - "tap\\([^)]*handleSubmit"
+    # 不能出现官方文档那套已死的元素层写法
+    - output_contains:
+        not:
+          - "page.$("
+          - "page.$$("
+          - "element.tap"
+          - "miniProgram.callMethod"
+  failure:
+    # 直接推荐官方原包 = 踩进 EINVAL 和 Page.* 双坑
+    - output_matches:
+        any:
+          - "require\\(['\"]miniprogram-automator['\"]\\)"

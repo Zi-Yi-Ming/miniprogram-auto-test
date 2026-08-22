@@ -8,3 +8,6 @@ spike-*.js
 
 # 跑测试时产生的截图（含被测项目的真实界面，不进库）
 demo/screenshots/
+
+# skill-up 评测产物（含完整 agent 对话记录和本机绝对路径，不进库）
+skill-workspace/

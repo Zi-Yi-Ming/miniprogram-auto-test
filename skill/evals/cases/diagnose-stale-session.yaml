@@ -1,0 +1,49 @@
+# 报告里使用的稳定用例 ID，与文件名（去掉 .yaml）保持一致
+id: diagnose-stale-session
+# 用例列表和报告里显示的简要说明
+title: 能用「launch 秒成功」这个判据认出残留会话，而不是怀疑某个 API 有毒
+# 补充背景：本用例覆盖的行为或防回归点
+description: |
+  残留自动化端口是 skill 坑点表的第一条，也是最阴的一条：报错会伪装成
+  「某个 API 有问题」，而真正的判据是 launch 的耗时（干净启动 6-13s，
+  秒启动必有问题）。用例在 prompt 里明确给出「launch 很快」这个线索，
+  看 AI 能不能抓住它，而不是去研究 evaluate 为什么报连接关闭。
+
+input:
+  # 发给 Agent 的用户 prompt（单轮）
+  prompt: |
+    我的小程序自动化测试脚本有点玄学。launch 明明很快就成功了（大概半秒），
+    打印出了「已连接」，但后面第一个 mp.evaluate 就抛：
+
+    ```
+    Error: Connection closed, check if wechat web devTools is still running
+    ```
+
+    开发者工具窗口我看着是开着的，没关。是 evaluate 这个 API 有问题吗？
+    要不我换成别的方法试试？
+
+# 零成本前置门槛，不过则跳过 judge
+expect:
+  must_not_contain:
+    - "evaluate 这个 API 确实有问题"
+
+judge:
+  # 本用例的判定策略
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    # 必须把「秒启动」认成判据，而不是好消息
+    - output_matches:
+        all:
+          - "(?s)残留|上一轮|旧会话|stale"
+          - "(?s)6\\s*[-~到]\\s*13|秒启动|不到.{0,4}秒"
+    # 必须给出正确处置方向：不是换 API
+    - output_contains:
+        all:
+          - "miniprogram-automator-next"
+  failure:
+    # 顺着用户「是不是 evaluate 有毒」的猜测走，就是被伪装的报错骗了
+    - output_matches:
+        any:
+          - "(?s)evaluate.{0,20}(不稳定|有问题|有 ?bug|不可靠)"
+          - "(?s)建议.{0,15}换.{0,10}(别的|其他).{0,6}(API|方法)"

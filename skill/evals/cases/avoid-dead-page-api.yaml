@@ -1,0 +1,52 @@
+# 报告里使用的稳定用例 ID，与文件名（去掉 .yaml）保持一致
+id: avoid-dead-page-api
+# 用例列表和报告里显示的简要说明
+title: 用户主动要求用官方 page.$() 写法时，能指出该协议已死并给替代
+# 补充背景：本用例覆盖的行为或防回归点
+description: |
+  用户会照抄官方文档。skill 的核心知识是「Page.*/Element.* 协议整族在当前
+  DevTools 上超时」。这里检验 AI 是否敢于反驳用户的官方写法，而不是顺着写。
+  这是最容易回归的一条：模型的先验知识（官方文档）和 skill 的实测结论冲突。
+
+input:
+  # 发给 Agent 的用户 prompt（单轮）
+  prompt: |
+    我按微信官方文档写了这段小程序自动化测试，跑起来所有调用都超时，帮我看看哪里错了：
+
+    ```javascript
+    const automator = require('miniprogram-automator')
+    const mp = await automator.launch({ projectPath: 'D:\\demo\\myapp' })
+    const page = await mp.currentPage()
+    const btn = await page.$('.submit-btn')
+    await btn.tap()
+    const data = await page.data()
+    ```
+
+# 零成本前置门槛，不过则跳过 judge
+expect:
+  must_contain:
+    - "miniprogram-automator-next"
+
+judge:
+  # 本用例的判定策略
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    # 必须点明是协议族整体不可用，而不是让用户改选择器 / 加超时
+    - output_matches:
+        all:
+          - "(?s)Page\\.\\*|Page\\.[a-z]|整族|全族|协议"
+          - "(?i)evaluate"
+    # 必须给出 next 包作为替代
+    - output_contains:
+        all:
+          - "miniprogram-automator-next"
+  failure:
+    # 把「协议已死」误诊成用户的选择器写错或超时设太短，是典型的错误诊断。
+    # 注意：正确回答常以否定形式引用这些说法（「不是选择器写错，不是等得不够久」），
+    # 所以不能用纯子串匹配（会把否定引用也算成命中）。这里只匹配「肯定式处方」——
+    # 必须同时出现「改什么」和「就好了」这个收束结构。
+    - output_matches:
+        any:
+          - "(?s)(改|换|调).{0,8}选择器.{0,8}(就|即可|能解决)"
+          - "(?s)(加大|调大|提高|放宽).{0,8}(超时|timeout).{0,8}(就|即可|能解决)"

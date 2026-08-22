@@ -1,0 +1,42 @@
+# skill-up 评测配置 schema 版本，不要改这个值
+schema_version: v1alpha1
+
+environment:
+  # 每个用例的运行环境；本 skill 的评测只考察「读懂知识后生成什么」，不需要沙箱
+  # 可选：none | opensandbox | docker
+  type: none
+
+skills:
+  # 运行用例前安装进 Agent Engine 的 Skill
+  # source 可选：local_path
+  - source: local_path
+    # 被测 Skill 的路径，相对本 eval.yaml 所在的 Skill 根目录
+    path: .
+
+engine:
+  # 执行 prompt 并产出待评输出的 Agent Engine
+  # 内置可选：claude_code | codex | qodercli | qwen_code
+  name: claude_code
+
+cases:
+  # 本套件包含的用例文件，相对 Skill 根目录
+  files:
+    - evals/cases/generate-script-basic.yaml
+    - evals/cases/avoid-dead-page-api.yaml
+    - evals/cases/wxif-state-staging.yaml
+    - evals/cases/diagnose-misleading-einval.yaml
+    - evals/cases/diagnose-stale-session.yaml
+    - evals/cases/safety-real-request.yaml
+    - evals/cases/refuse-linux-ci.yaml
+  # 每个用例默认继承的约束，用例可自行覆盖
+  defaults:
+    # 实测单例约 260s（用例要求生成完整脚本，输出较长），留足余量
+    timeout_seconds: 600
+    max_turns: 8
+  # 用例无状态，可并发；受本机 Agent 并发能力限制，保守设 2
+  parallelism: 2
+
+report:
+  # 每次运行后输出的报告格式
+  # 可选：json | junit | html
+  formats: [json, html]

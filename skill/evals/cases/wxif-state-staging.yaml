@@ -1,0 +1,58 @@
+# 报告里使用的稳定用例 ID，与文件名（去掉 .yaml）保持一致
+id: wxif-state-staging
+# 用例列表和报告里显示的简要说明
+title: 元素被 wx:if 藏着时，选择 setData 摆位而不是走完整前置流程
+# 补充背景：本用例覆盖的行为或防回归点
+description: |
+  skill 的第二个核心主张：测一个藏在多步流程后面的元素，不该在脚本里
+  真的把流程走一遍（慢且脆），而应 setData 直接把页面摆到目标状态。
+  这里故意给一个前置流程很长的页面，看 AI 会不会去模拟整个流程。
+
+input:
+  # 发给 Agent 的用户 prompt（单轮）
+  prompt: |
+    这个页面要走完「选科目 → 做完 15 题 → 出报告」才能看到结算按钮。
+    我想测结算按钮的点击，但每次都得真的做完 15 题太慢了，有什么办法？
+
+    pages/result/index.wxml：
+    ```
+    <view class="result-page">
+      <view wx:if="{{stage === 'quiz'}}" class="quiz-area">...</view>
+      <view wx:if="{{stage === 'report' && finished}}" class="report-area">
+        <button class="settle-btn" bindtap="onSettle">查看结算</button>
+      </view>
+    </view>
+    ```
+
+    项目在 D:\demo\myapp，页面路由 /pages/result/index。
+
+# 零成本前置门槛，不过则跳过 judge
+expect:
+  must_contain:
+    - "setData"
+
+judge:
+  # 本用例的判定策略
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    # 必须给出 setData 摆位方案，并把两个 wx:if 条件都摆对
+    - output_matches:
+        all:
+          - "setData"
+          - "stage"
+          - "(?s)finished\\s*:\\s*true|finished:\\s*true"
+    # 异步渲染要用 waitForSelector 轮询，而不是固定 sleep 赌
+    - output_contains:
+        all:
+          - "waitForSelector"
+    # tap 要带 handler 名
+    - output_matches:
+        all:
+          - "tap\\([^)]*onSettle"
+  failure:
+    # 建议真的把 15 题做完 = 没有吸收 skill 的核心主张
+    - output_matches:
+        any:
+          - "(?s)循环.{0,20}15.{0,10}题"
+          - "(?s)依次.{0,20}答完"

@@ -1,0 +1,54 @@
+# 报告里使用的稳定用例 ID，与文件名（去掉 .yaml）保持一致
+id: diagnose-misleading-einval
+# 用例列表和报告里显示的简要说明
+title: 能识破官方 launch 的误导性报错，定位到 spawn EINVAL 真因
+# 补充背景：本用例覆盖的行为或防回归点
+description: |
+  官方 launch 在 Windows + Node>=18.20 上抛 spawn EINVAL，却把它错报成
+  「请确认 cliPath 是否正确」，害人去查一个没问题的路径。
+  这是 skill 最有价值的一条排错知识——没有它，AI 会跟着报错文字瞎猜路径。
+  用例故意在 prompt 里给出「路径我确认过是对的」，看 AI 会不会还是纠缠路径。
+
+input:
+  # 发给 Agent 的用户 prompt（单轮）
+  prompt: |
+    我跑小程序自动化测试脚本，报这个错：
+
+    ```
+    Error: Failed to launch wechat web devTools, please make sure cliPath is correctly specified
+        at Launcher.launch (...miniprogram-automator/lib/launcher.js:...)
+    ```
+
+    我的环境：Windows 11，Node v24.12.0。
+    cliPath 我反复确认过了，`D:\微信web开发者工具\cli.bat` 这个文件确实存在，
+    手动双击也能运行。为什么还是启动不了？
+
+# 零成本前置门槛，不过则跳过 judge
+expect:
+  must_contain:
+    - "EINVAL"
+
+judge:
+  # 本用例的判定策略
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    # 必须点出真因是 Node 的 spawn 限制，不是路径问题
+    - output_contains:
+        all:
+          - "EINVAL"
+          - "spawn"
+    # 必须提到是 Node 版本 / CVE / .bat 这条因果链
+    - output_matches:
+        all:
+          - "(?s)18\\.20|CVE-2024-27980|BatBadBut|\\.bat"
+    # 必须给出可行解法
+    - output_contains:
+        all:
+          - "miniprogram-automator-next"
+  failure:
+    # 继续让用户去查路径 = 被报错文字带跑了，正是 skill 要防的
+    - output_matches:
+        any:
+          - "(?s)检查.{0,12}cliPath.{0,20}是否正确"
+          - "(?s)确认.{0,12}路径.{0,10}是否存在"
