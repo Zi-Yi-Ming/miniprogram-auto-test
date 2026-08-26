@@ -39,14 +39,14 @@
 const assert = require('assert')
 const path = require('path')
 
-// ====== 改成你的真实路径 ======
+// ====== 路径：优先环境变量，未设置时用下面的值兜底 ======
 // ⚠️ 别照抄网上的默认路径。开发者工具的安装位置是用户可改的。
 //    本机实测装在 D 盘根目录，不在 Program Files 下。
 //    探测方法（PowerShell，工具开着时最准）：
 //      Get-Process wechatdevtools | Select-Object Path
 //    不传 cliPath 的话，包会自己按常见位置 + 运行进程去探测。
-const CLI_PATH = 'D:\\微信web开发者工具\\cli.bat'
-const PROJECT_PATH = 'D:\\workspace\\coach-miniapp'
+const CLI_PATH = process.env.WXDEVTOOLS_CLI || 'D:\\微信web开发者工具\\cli.bat'
+const PROJECT_PATH = process.env.MP_PROJECT_PATH || 'D:\\workspace\\coach-miniapp'
 // ==============================
 
 // miniprogram-automator 是本包的 peerDependency，装在被测项目里；

@@ -17,11 +17,12 @@
 
 const ARG_PORT = Number(process.argv[2]) || null
 
-// ====== 改成你的真实路径 ======
+// ====== 路径：优先环境变量，未设置时用下面的值兜底 ======
 // 别照抄：开发者工具安装位置是用户可改的。探测方法（工具开着时最准）：
 //   Get-Process wechatdevtools | Select-Object Path
-const CLI_PATH = 'D:\\微信web开发者工具\\cli.bat'
-const PROJECT_PATH = 'D:\\workspace\\coach-miniapp'
+// 可用环境变量覆盖：WXDEVTOOLS_CLI、MP_PROJECT_PATH
+const CLI_PATH = process.env.WXDEVTOOLS_CLI || 'D:\\微信web开发者工具\\cli.bat'
+const PROJECT_PATH = process.env.MP_PROJECT_PATH || 'D:\\workspace\\coach-miniapp'
 // ==============================
 
 const LAUNCH_PORT = 9420
