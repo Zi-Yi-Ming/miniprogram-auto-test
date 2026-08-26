@@ -234,7 +234,15 @@ class PageProxy {
         `input('${selector}') 需要 handler 名（WXML 里 bindinput="xxx" 的那个）。原因同 tap()。`
       )
     }
-    const el = await this.query(selector, opts.index || 0)
+    const idx = opts.index || 0
+    const el = await this.query(selector, idx)
+    if (!el) {
+      const total = await this.count(selector)
+      throw new Error(
+        `input 失败：选择器 '${selector}' ${total === 0 ? '没匹配到任何元素' : `只匹配到 ${total} 个，取不到 index=${idx}`}。\n` +
+          '常见原因：元素被 wx:if 藏起来了（可以先 setData 把页面摆到对应状态），或选择器写错了。'
+      )
+    }
     const res = await this.mp.evaluate(
       (n, v, ds, id) => {
         const ps = getCurrentPages()
