@@ -207,6 +207,10 @@ try { const t2 = Date.now(); await p.data(); console.log('Page.data 活了', Dat
 catch (e) { console.log('Page.data 死:', e.message) }
 ```
 
+## 评测套件（`evals/`）
+
+本 skill 目录下带一套 skill-up 风格的评测套件（`eval.yaml` + `evals/cases/` 共 7 个用例），考察 AI 读完本 skill 后的输出质量：避开已死 API、`wx:if` 状态摆位、识别误导性的 `spawn EINVAL` 报错、识别残留会话、基础脚本生成、真实请求的安全处理、拒绝在 Linux/CI 上跑。**改完本 skill 建议跑一遍**，确认措辞调整没有把某个用例带崩；单例实测约 260s，报告输出 json + html。
+
 ## 参考
 
 - 官方 SDK：`miniprogram-automator`（npm，latest `0.12.1`，⚠️ 2023-11 后未更新）。`repository` 指向腾讯内网域名，**没有公开仓库，没法提 PR**，这也是本项目存在的原因。

@@ -199,7 +199,8 @@ miniprogram-auto-test/
 ├── .github/workflows/
 │   └── ci.yml                             # CI：语法门 + 冒烟测试（不需要开发者工具的那部分）
 ├── skill/
-│   └── SKILL.md                           # skill 本体（复制到 ~/.claude/skills/）
+│   ├── SKILL.md                           # skill 本体（复制到 ~/.claude/skills/）
+│   └── evals/                             # skill-up 风格评测套件（7 个用例，改 skill 后跑一遍回归）
 ├── packages/
 │   └── miniprogram-automator-next/        # 发布到 npm 的修复包
 │       ├── src/
