@@ -1,8 +1,8 @@
 # miniprogram-automator-next
 
 [![npm](https://img.shields.io/npm/v/miniprogram-automator-next.svg)](https://www.npmjs.com/package/miniprogram-automator-next)
-[![CI](https://img.shields.io/github/actions/workflow/status/Zi-Yi-Ming/miniprogram-auto-test/ci.yml?branch=main)](https://github.com/Zi-Yi-Ming/miniprogram-auto-test/actions/workflows/ci.yml)
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Zi-Yi-Ming/miniprogram-auto-test/blob/main/LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/ZiY1Ming/miniprogram-auto-test/ci.yml?branch=main)](https://github.com/ZiY1Ming/miniprogram-auto-test/actions/workflows/ci.yml)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ZiY1Ming/miniprogram-auto-test/blob/main/LICENSE)
 
 > 微信官方 `miniprogram-automator` 的适配层。修掉它在当前版本环境下**两处已经坏掉**的东西，其余能力原样透传。
 
@@ -238,4 +238,4 @@ await mp.evaluate((x) => x + 1, n)    // ✅ 43
 
 MIT。上游 `miniprogram-automator` 亦为 MIT。
 
-完整背景、AI 辅助生成测试脚本的用法、以及实测数据见仓库：[`miniprogram-auto-test`](https://github.com/Zi-Yi-Ming/miniprogram-auto-test)。
+完整背景、AI 辅助生成测试脚本的用法、以及实测数据见仓库：[`miniprogram-auto-test`](https://github.com/ZiY1Ming/miniprogram-auto-test)。

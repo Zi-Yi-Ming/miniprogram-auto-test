@@ -15,15 +15,15 @@
     "spawn"
   ],
   "license": "MIT",
-  "author": "Zi-Yi-Ming (https://github.com/Zi-Yi-Ming)",
-  "homepage": "https://github.com/Zi-Yi-Ming/miniprogram-auto-test/tree/main/packages/miniprogram-automator-next#readme",
+  "author": "ZiY1Ming (https://github.com/ZiY1Ming)",
+  "homepage": "https://github.com/ZiY1Ming/miniprogram-auto-test/tree/main/packages/miniprogram-automator-next#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Zi-Yi-Ming/miniprogram-auto-test.git",
+    "url": "git+https://github.com/ZiY1Ming/miniprogram-auto-test.git",
     "directory": "packages/miniprogram-automator-next"
   },
   "bugs": {
-    "url": "https://github.com/Zi-Yi-Ming/miniprogram-auto-test/issues"
+    "url": "https://github.com/ZiY1Ming/miniprogram-auto-test/issues"
   },
   "main": "src/index.js",
   "scripts": {
