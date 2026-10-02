@@ -1,8 +1,5 @@
 # miniprogram-auto-test
 
-> [!WARNING]
-> **本项目已停止维护。** 作者已不再做微信小程序开发，仓库仅作存档保留，不再跟进微信开发者工具 / 基础库的后续变化，Issue 与 PR 一般不会处理。[`miniprogram-automator-next`](https://www.npmjs.com/package/miniprogram-automator-next) 仍可安装使用，需要继续维护请 fork。
-
 一句话生成微信小程序自动化测试脚本：AI 读你的 WXML + JS，产出能直接跑的测试脚本；顺手修掉官方 SDK 已经坏掉的两处。
 
 
